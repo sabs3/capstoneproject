@@ -6,11 +6,6 @@ version: 2.1
 orbs:
   docker: circleci/docker@1.6.0
 
-workflows:
-  deployment:
-    jobs:
-      - linting-docker-code
-
 jobs:
   liniting-docker-code:
     docker:
@@ -41,3 +36,8 @@ jobs:
         command: |
           . venv/bin/activate
           make lint
+
+workflows:
+  deployment:
+    jobs:
+      - linting-docker-code
