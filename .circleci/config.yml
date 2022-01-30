@@ -7,7 +7,7 @@ orbs:
   docker: circleci/docker@1.6.0
 
 jobs:
-  liniting-docker-code:
+  linting-docker-code:
     docker:
     - image: python:3.7.3-stretch
     working_directory: ~/repo
