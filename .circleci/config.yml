@@ -87,4 +87,5 @@ workflows:
   deployment:
     jobs:
       - linting-docker-code
+      - create-kubernetes-cluster
     
