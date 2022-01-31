@@ -5,6 +5,8 @@
 version: 2.1
 orbs:
   docker: circleci/docker@1.6.0
+  aws-eks: circleci/aws-eks@0.2.3
+  kubernetes: circleci/kubernetes@0.4.0
 
 jobs:
   linting-docker-code:
@@ -24,7 +26,6 @@ jobs:
           python3 -m venv venv
           . venv/bin/activate
           make install
-          #no_output_timeout: 2h
           wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&
           chmod +x /bin/hadolint
     - save_cache:
@@ -37,7 +38,53 @@ jobs:
           . venv/bin/activate
           make lint
 
+  create-kubernetes-cluster:
+    docker:
+    - image: alpine/k8s:1.15.12
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - run:
+          name: store current cluster name
+          command: |
+            echo $(aws eks list-clusters | python3 -c "import sys, json; print(json.load(sys.stdin)['clusters'][0])") > cluster-old.txt
+            cat cluster-old.txt
+        - run:
+            name: create new kubernetes cluster
+            command: |
+              # Updating the cluster name in the Yaml 
+              sed -i "s/basic-cluster/udacity-capstone-${CIRCLE_SHA1:0:7}/g" cluster.yml
+              eksctl create cluster -f cluster.yml
+        - run:
+            name: store new cluster name
+            command: |
+              echo "udacity-capstone-${CIRCLE_SHA1:0:7}" > cluster.txt
+              cat cluster.txt
+        - run:
+            name: Deploy Application on Kubernetes
+            command: |
+              aws eks update-kubeconfig --name "udacity-capstone-${CIRCLE_SHA1:0:7}"
+              echo "applying config"
+              export KUBECONFIG=/root/.kube/config
+              kubectl get svc
+              echo "applying config files"
+              kubectl apply -f deployment/
+              echo "checking rollout status before moving on"
+              kubectl rollout status deployment nginx-web-app
+        - run:
+            name: Add service ip to a file
+            command: |
+              echo "$(kubectl get services nginx-web-app-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > service.txt
+              cat service.txt
+        - persist_to_workspace:
+            root: /tmp/workspace
+            paths:
+              - cluster.txt
+              - cluster-old.txt
+              - service.txt
+
 workflows:
   deployment:
     jobs:
       - linting-docker-code
+    

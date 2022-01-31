@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlmodel-app
+spec:
+  selector:
+    matchLabels:
+      app: mlmodel-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mlmodel-app
+    spec:
+      containers:
+      - name: mlmodel-app
+        image: sabs3/udacity-project:latest
+        ports:
+        - containerPort: 80
