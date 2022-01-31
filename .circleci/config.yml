@@ -122,10 +122,10 @@ jobs:
           name: delete previous MLmodel apps deployment
           command: |
             OLD=$(cat /tmp/workspace/cluster-old.txt)
-            cat /tmp/workspace/cluster-old.txt
+            echo $OLD
             if [ -z "$OLD" ]
             then
-                  echo $OLD " is not found"
+                  echo " No old cluster found"
             else
                   echo "destroying old eks : " $OLD
                   aws eks update-kubeconfig --name="${OLD}"
@@ -137,10 +137,11 @@ jobs:
                   echo "deleted"
             fi
       - run:
-          name: Delete prev k8
+          name: Delete previous kubernetes cluster
           command: |
-            #old is savid in the previous kubernetes file 
+            #old is in the previous kubernetes file 
             OLD=$(cat /tmp/workspace/cluster-old.txt)
+            echo $OLD
             #this checks if old exists
             if [ -z "$OLD" ]
             then
