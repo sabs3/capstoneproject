@@ -83,9 +83,84 @@ jobs:
             - cluster-old.txt
             - service.txt
 
+  smoke-test:
+    docker:
+      - image: alpine/k8s:1.16.15
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      
+      - run:
+          name: get curl
+          command: |
+            apk add curl
+      - run:
+          name: smoke
+          command: |
+            export serviceURL="$(cat /tmp/workspace/service.txt)" 
+            export URL="http://"${serviceURL}":8000"
+            sleep 240
+            if curl ${URL} | grep "Sklearn"
+            then
+              echo "mlmodel is listening at port 8000 "
+            else
+              echo "Error - site not reached"
+              return 1
+            fi
+
+  destroy-previous-deployment:
+    docker:
+      - image: alpine/k8s:1.16.15
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      
+      - run:
+          name: delete previous MLmodel apps deployment
+          command: |
+            OLD=$(cat /tmp/workspace/cluster-old.txt)
+            cat /tmp/workspace/cluster-old.txt
+            if [ -z "$OLD" ]
+            then
+                  echo $OLD " is not found"
+            else
+                  echo "destroying old eks : " $OLD
+                  aws eks update-kubeconfig --name="${OLD}"
+                  export KUBECONFIG=/root/.kube/config
+                  echo "updated config"
+                  kubectl get svc
+                  echo "running deletion"
+                  kubectl delete -f cluster.yml
+                  echo "deleted"
+            fi
+      - run:
+          name: Delete prev k8
+          command: |
+            #old is savid in the previous kubernetes file 
+            OLD=$(cat /tmp/workspace/cluster-old.txt)
+            #this checks if old exists
+            if [ -z "$OLD" ]
+            then
+                  echo $OLD " is not found"
+            else
+                  echo "destroying old containers : " $OLD
+                  eksctl delete cluster $OLD
+                  echo "Deleted"
+            fi
+
 workflows:
   deployment:
     jobs:
       - linting-docker-code
       - create-kubernetes-cluster
+      - smoke-test:
+          requires:
+            - create-kubernetes-cluster
+      - destroy-previous-deployment:
+          requires:
+            - smoke-test
+
     
