@@ -45,7 +45,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["45:de:fd:9a:5f:31:c0:cc:3f:94:22:ef:82:73:35:a9"]
+          fingerprints: ["0f:62:8c:7b:9f:78:e0:4d:cf:08:b5:0c:2a:b3:25:60"]
       - run:
           name: store current cluster name
           command: |
