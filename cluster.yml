@@ -17,4 +17,4 @@ nodeGroups:
     desiredCapacity: 2
     volumeSize: 100
     ssh:
-      allow: true
+      publicKeyPath: ~/.ssh/udacity.pem
