@@ -133,7 +133,7 @@ jobs:
                   echo "updated config"
                   kubectl get svc
                   echo "running deletion"
-                  kubectl delete -f cluster.yml
+                  kubectl delete -f deployment/
                   echo "deleted"
             fi
       - run:
