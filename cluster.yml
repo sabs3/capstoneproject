@@ -3,7 +3,7 @@ kind: ClusterConfig
 
 metadata:
   name: kubernetes-cluster
-  region: us-east-1
+  region: us-east-1a,us-east-1b,us-east-1c
 
 nodeGroups:
   - name: mlmodel-1
