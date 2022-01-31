@@ -44,6 +44,8 @@ jobs:
     working_directory: /tmp/workspace
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints: ["0f:62:8c:7b:9f:78:e0:4d:cf:08:b5:0c:2a:b3:25:60"]
       - run:
           name: store current cluster name
           command: |
@@ -70,7 +72,7 @@ jobs:
               echo "applying config files"
               kubectl apply -f deployment/
               echo "checking rollout status before moving on"
-              kubectl rollout status deployment nginx-web-app
+              kubectl rollout status deployment mlmodel-app
         - run:
             name: Add service ip to a file
             command: |
