@@ -11,7 +11,7 @@ nodeGroups:
     desiredCapacity: 2
     volumeSize: 80
     ssh:
-      allow: true
+      publicKeyPath: ~/.ssh/udacity.pem
   - name: mlmodel-2
     instanceType: t2.micro
     desiredCapacity: 2
