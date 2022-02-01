@@ -52,7 +52,6 @@ jobs:
       - run:
           name: create new kubernetes cluster
           command: |
-            # Updating the cluster name in the Yaml 
             sed -i "s/kubernetes-cluster/udacity-capstone-${CIRCLE_SHA1:0:7}/g" cluster.yml
             eksctl create cluster -f cluster.yml
       - run:
@@ -67,9 +66,8 @@ jobs:
             echo "applying config"
             export KUBECONFIG=/root/.kube/config
             kubectl get svc
-            echo "applying config files"
+            echo "deplying configs"
             kubectl apply -f deployment/
-            echo "checking rollout status before moving on"
             kubectl rollout status deployment mlmodel-app
       - run:
           name: Add service ip to a file
