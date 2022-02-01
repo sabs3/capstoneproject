@@ -98,6 +98,7 @@ jobs:
           command: |
             export serviceURL="$(cat /workspace/lb-service.txt)" 
             export URL="http://"${serviceURL}":8000"
+            echo $URL
             sleep 300
             if curl ${URL} | grep "Sklearn"
             then
