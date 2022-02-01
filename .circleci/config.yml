@@ -140,7 +140,7 @@ jobs:
           name: Delete old kubernetes cluster
           command: |
             #old is in the previous kubernetes file 
-            OLD=$(cat /cluster-old.txt)
+            OLD=$(cat /workspace/cluster-old.txt)
             echo $OLD
             #this checks if old exists
             if [ -z "$OLD" ]
