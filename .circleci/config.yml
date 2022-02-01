@@ -156,7 +156,15 @@ workflows:
   deployment:
     jobs:
       - linting-docker-code
-      - create-kubernetes-cluster
+      - docker/publish:
+          image: sabs3/udacity-project
+          tag: latest
+          dockerfile: dockerfile
+          requires:
+            - linting-docker-code
+      - create-kubernetes-cluster:
+          requires:
+            - docker/publish
       - smoke-test:
           requires:
             - create-kubernetes-cluster
