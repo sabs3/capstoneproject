@@ -39,7 +39,7 @@ jobs:
   create-kubernetes-cluster:
     docker:
     - image: alpine/k8s:1.15.12
-    working_directory: /tmp/workspace
+    working_directory: /workspace
     steps:
       - checkout
       #- add_ssh_keys:
@@ -58,8 +58,8 @@ jobs:
       - run:
           name: store new cluster name
           command: |
-            echo "udacity-capstone-${CIRCLE_SHA1:0:7}" > cluster.txt
-            cat cluster.txt
+            echo "udacity-capstone-${CIRCLE_SHA1:0:7}" > cluster-new.txt
+            cat cluster-new.txt
       - run:
           name: Deploy Application on Kubernetes
           command: |
@@ -75,13 +75,13 @@ jobs:
           name: Add service ip to a file
           command: |
             echo "$(kubectl get services mlmodel-app-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > service.txt
-            cat service.txt
+            cat lb-service.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: /workspace
           paths:
-            - cluster.txt
+            - cluster-new.txt
             - cluster-old.txt
-            - service.txt
+            - lb-service.txt
 
   smoke-test:
     docker:
@@ -89,7 +89,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+          at: /workspace
       
       - run:
           name: get curl
@@ -98,9 +98,9 @@ jobs:
       - run:
           name: smoke
           command: |
-            export serviceURL="$(cat /tmp/workspace/service.txt)" 
+            export serviceURL="$(cat /workspace/lb-service.txt)" 
             export URL="http://"${serviceURL}":8000"
-            sleep 240
+            sleep 300
             if curl ${URL} | grep "Sklearn"
             then
               echo "mlmodel is listening at port 8000 "
@@ -112,16 +112,16 @@ jobs:
   destroy-previous-deployment:
     docker:
       - image: alpine/k8s:1.16.15
-    working_directory: /tmp/workspace
+    working_directory: /workspace
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+          at: /workspace
       
       - run:
           name: delete previous MLmodel apps deployment
           command: |
-            OLD=$(cat /tmp/workspace/cluster-old.txt)
+            OLD=$(cat /workspace/cluster-old.txt)
             echo $OLD
             if [ -z "$OLD" ]
             then
@@ -137,10 +137,10 @@ jobs:
                   echo "deleted"
             fi
       - run:
-          name: Delete previous kubernetes cluster
+          name: Delete old kubernetes cluster
           command: |
             #old is in the previous kubernetes file 
-            OLD=$(cat /tmp/workspace/cluster-old.txt)
+            OLD=$(cat /cluster-old.txt)
             echo $OLD
             #this checks if old exists
             if [ -z "$OLD" ]
@@ -161,8 +161,7 @@ workflows:
           tag: ${CIRCLE_SHA1:0:7},latest
           dockerfile: Dockerfile
           requires:
-            - linting-docker-code
-          
+            - linting-docker-code    
       - create-kubernetes-cluster:
           requires:
             - docker/publish
