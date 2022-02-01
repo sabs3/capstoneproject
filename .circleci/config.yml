@@ -157,8 +157,8 @@ workflows:
     jobs:
       - linting-docker-code
       - docker/publish:
-          image: sabs3/udacity-project
-          tag: latest
+          image: $DOCKER_LOGIN/udacity-project
+          tag: ${CIRCLE_SHA1:0:7},latest
           dockerfile: Dockerfile
           requires:
             - linting-docker-code
