@@ -160,7 +160,6 @@ workflows:
           image: sabs3/udacity-project
           tag: latest
           dockerfile: Dockerfile
-          use-remote-docker: true
           requires:
             - linting-docker-code
           
