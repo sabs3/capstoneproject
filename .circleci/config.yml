@@ -159,9 +159,11 @@ workflows:
       - docker/publish:
           image: sabs3/udacity-project
           tag: latest
-          dockerfile: dockerfile
+          dockerfile: Dockerfile
+          use-remote-docker: true
           requires:
             - linting-docker-code
+          
       - create-kubernetes-cluster:
           requires:
             - docker/publish
