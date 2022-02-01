@@ -1,8 +1,8 @@
 [![CircleCI](https://circleci.com/gh/sabs3/capstoneproject/tree/main.svg?style=svg)](https://circleci.com/gh/sabs3/capstoneproject/tree/main)
 
-Capstone Project - SkLearn Application Deployment pipeline
+Capstone Project - This project is an extension to SkLearn Application Deployment
 
-This project has bellow functionality:
+This pipeline has below functionality:
 
 1) Lints over docker files prior to Image build
 2) Uploads Image to docker hub with the CircleCI job ID tag
