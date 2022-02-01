@@ -72,7 +72,7 @@ jobs:
       - run:
           name: Add service ip to a file
           command: |
-            echo "$(kubectl get services mlmodel-app-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > service.txt
+            echo "$(kubectl get services mlmodel-app-service --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')" > lb-service.txt
             cat lb-service.txt
       - persist_to_workspace:
           root: /workspace
