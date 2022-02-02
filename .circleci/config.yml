@@ -159,11 +159,11 @@ workflows:
           tag: ${CIRCLE_SHA1:0:7},latest
           dockerfile: Dockerfile
           after_build:
-            -run:
-              name: list docker image after build
-              command: 
-                docker image ls
-                docker run -p 8000:80 udacity-project
+            - run:
+                name: list docker image after build
+                command: 
+                  echo "$(docker image ls)
+                  docker run -p 8000:80 udacity-project
               
           requires:
             - linting-docker-code    
