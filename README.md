@@ -8,3 +8,8 @@ Capstone Project - This project recycles Sklearn mlmodel prediction code with ad
 3) Deploys a EKS cluster and deploys latest built  to a kubernetes cluster.
 4) Smoke tests is run to confirm application is available via loadbalancer service
 5) Deletes previous kubernetes deployment and cluster
+
+\includegraphics[]{screenshots/lint_failing.png}
+\includegraphics[]{screenshots/lint_sucess.png}
+\includegraphics[]{screenshots/pipeline.png}
+\includegraphics[]{screenshots/successful_deployment.png}
