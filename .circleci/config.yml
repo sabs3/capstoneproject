@@ -158,6 +158,11 @@ workflows:
           image: $DOCKER_LOGIN/udacity-project
           tag: ${CIRCLE_SHA1:0:7},latest
           dockerfile: Dockerfile
+          after_build:
+            -run:
+              command:
+                echo "$(docker image ls)s
+              name: list docker image after build
           requires:
             - linting-docker-code    
       - create-kubernetes-cluster:
