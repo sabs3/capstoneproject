@@ -162,8 +162,8 @@ workflows:
             - run:
                 name: list docker image after build
                 command: 
-                  echo "$(docker image ls)"s
-                  docker run -p 8000:80 udacity-project
+                  echo "$(./run_docker.sh)"
+                  echo "(./make_prediction.sh)"
           requires:
             - linting-docker-code    
       - create-kubernetes-cluster:
