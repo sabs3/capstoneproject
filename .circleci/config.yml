@@ -109,11 +109,13 @@ jobs:
       - run:
           name: Predict 
           command: |
-            export serviceURL="$(cat /workspace/lb-service.txt)" 
+            export serviceURL="$(cat /workspace/lb-service.txt)"
+            export URL="http://"${serviceURL}":8000"
+            echo $URL
             curl -d '{  "CHAS":{  "0":0},"RM":{  "0":6.575},"TAX":{  "0":296.0},\
             "PTRATIO":{  "0":15.3},"B":{  "0":396.9},"LSTAT":{  "0":4.98}}'\
             -H "Content-Type: application/json" \
-            -X POST http://"${serviceURL}":8000/predict
+            -X POST http://$URL:8000/predict
             
   destroy-previous-deployment:
     docker:
