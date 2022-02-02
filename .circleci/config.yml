@@ -66,7 +66,7 @@ jobs:
             echo "applying config"
             export KUBECONFIG=/root/.kube/config
             kubectl get svc
-            echo "deplying configs"
+            echo "deploying configs"
             kubectl apply -f deployment/
             kubectl rollout status deployment mlmodel-app
       - run:

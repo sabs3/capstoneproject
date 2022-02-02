@@ -16,4 +16,4 @@ spec:
       - name: mlmodel-app
         image: sabs3/udacity-project:latest
         ports:
-          - containerPort: 80
+        - containerPort: 80
