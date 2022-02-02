@@ -160,8 +160,7 @@ workflows:
           dockerfile: Dockerfile
           after_build:
             -run:
-              command:
-                echo "$(docker image ls)s
+              command: echo "$(docker image ls)"
               name: list docker image after build
           requires:
             - linting-docker-code    
