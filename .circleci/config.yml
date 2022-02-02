@@ -99,7 +99,7 @@ jobs:
             export serviceURL="$(cat /workspace/lb-service.txt)" 
             export URL="http://"${serviceURL}":8000"
             echo $URL
-            sleep 300
+            sleep 200
             if curl ${URL} | grep "Sklearn"
             then
               echo "mlmodel is listening at port 8000 "
