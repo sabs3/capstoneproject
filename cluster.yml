@@ -3,7 +3,7 @@ kind: ClusterConfig
 
 metadata:
   name: kubernetes-cluster
-  region: eu-west-3
+  region: eu-west-2
 
 nodeGroups:
   - name: mlmodel-1
