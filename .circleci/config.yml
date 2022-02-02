@@ -163,7 +163,7 @@ workflows:
                 name: list docker image after build
                 command: 
                   echo "$(docker image ls)"
-                  echo "$(docker run -p 8000:80 udacity-project)"
+                  echo "$(docker run -p 8000:80 sabs3/udacity-project)"
             - run:
                 name: testing docker image
                 command:
