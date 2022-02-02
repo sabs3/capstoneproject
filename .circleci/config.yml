@@ -167,6 +167,7 @@ workflows:
             - run:
                 name: testing docker image
                 command:
+                  chmod 775 make_prediction.sh
                   echo "$(./make_prediction.sh)"
           requires:
             - linting-docker-code    
